@@ -1,4 +1,13 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["github>zcxy-dev/renovate-config"]
+  "extends": ["github>zcxy-dev/renovate-config"],
+  "customManagers": [
+    {
+      "description": "The validator's version in the validate workflow's npx line",
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.github/workflows/validate\\.yml$/"],
+      "matchStrings": ["--package (?<depName>renovate)@(?<currentValue>\\d+\\.\\d+\\.\\d+)"],
+      "datasourceTemplate": "npm"
+    }
+  ]
 }
