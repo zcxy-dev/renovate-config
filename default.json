@@ -1,0 +1,35 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Every zcxy-dev repository's dependency updates: extend github>zcxy-dev/renovate-config",
+  "extends": ["config:recommended", ":disableDependencyDashboard", ":semanticCommits", ":semanticCommitScope(deps)", "helpers:pinGitHubActionDigests"],
+  "labels": ["dependencies"],
+  "minimumReleaseAge": "7 days",
+  "internalChecksFilter": "strict",
+  "vulnerabilityAlerts": { "labels": ["dependencies", "security"] },
+  "packageRules": [
+    {
+      "description": "Patch and minor updates merge on their own once the required checks pass, through GitHub's auto-merge",
+      "matchUpdateTypes": ["minor", "patch", "pin", "pinDigest", "digest"],
+      "automerge": true
+    },
+    { "matchCategories": ["js"], "matchUpdateTypes": ["minor", "patch"], "groupName": "npm non-major" },
+    { "matchCategories": ["python"], "matchUpdateTypes": ["minor", "patch"], "groupName": "Python non-major" },
+    { "matchManagers": ["mise"], "matchUpdateTypes": ["minor", "patch"], "groupName": "mise tools non-major" },
+    { "matchCategories": ["docker"], "matchUpdateTypes": ["minor", "patch", "digest"], "groupName": "Docker images non-major" },
+    { "matchManagers": ["github-actions"], "matchUpdateTypes": ["minor", "patch", "digest", "pinDigest"], "groupName": "GitHub Actions non-major" },
+    {
+      "description": "Node moves in one pull request everywhere it is named (the Docker image, .node-version, mise, engines), so files that must match never land apart; a repository's own rule still holds a major back. No seven-day wait: Docker Hub dates a tag by its last push, and the node images are rebuilt often enough that the image would never come of age and the group would never complete",
+      "matchDepNames": ["node"],
+      "minimumReleaseAge": "0 days",
+      "groupName": "Node.js"
+    },
+    {
+      "description": "The shared workflows' pins (uses: zcxy-dev/dotfiles/.github/workflows/<name>.yml@<sha> # workflows-vX.Y.Z) move to a new release together, without the seven-day wait, since the releases are our own",
+      "matchManagers": ["github-actions"],
+      "matchDepNames": ["zcxy-dev/dotfiles"],
+      "versioning": "regex:^workflows-v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$",
+      "minimumReleaseAge": "0 days",
+      "groupName": "shared workflows"
+    }
+  ]
+}
