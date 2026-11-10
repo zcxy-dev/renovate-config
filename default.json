@@ -8,9 +8,13 @@
   "minimumReleaseAge": "7 days",
   "prHourlyLimit": 0,
   "major": { "dependencyDashboardApproval": true },
-  "lockFileMaintenance": { "automerge": true },
   "vulnerabilityAlerts": { "labels": ["dependencies", "security"], "minimumReleaseAge": "0 days" },
   "packageRules": [
+    {
+      "description": "config:best-practices waits three days for npm releases; every repository waits seven",
+      "matchDatasources": ["npm"],
+      "minimumReleaseAge": "7 days"
+    },
     {
       "description": "Patch and minor updates merge on their own once the required checks pass, through GitHub's auto-merge",
       "matchUpdateTypes": ["minor", "patch", "pin", "pinDigest", "digest"],
@@ -20,6 +24,12 @@
     { "matchCategories": ["python"], "matchUpdateTypes": ["minor", "patch"], "groupName": "Python non-major" },
     { "matchManagers": ["mise"], "matchUpdateTypes": ["minor", "patch"], "groupName": "mise tools non-major" },
     { "matchCategories": ["docker"], "matchUpdateTypes": ["minor", "patch", "digest"], "groupName": "Docker images non-major" },
+    {
+      "description": "An official image is rebuilt under the same tag every few days, so its digest would never come of age: digest updates of a tag already in use skip the wait",
+      "matchDatasources": ["docker"],
+      "matchUpdateTypes": ["digest", "pinDigest"],
+      "minimumReleaseAge": "0 days"
+    },
     { "matchManagers": ["github-actions"], "matchUpdateTypes": ["minor", "patch", "digest", "pinDigest"], "groupName": "GitHub Actions non-major" },
     {
       "description": "Node moves in one pull request everywhere it is named (the Docker image, .node-version, mise, engines), so files that must match never land apart. No seven-day wait: Docker Hub dates a tag by its last push, and the node images are rebuilt often enough that the image would never come of age and the group would never complete",
@@ -28,20 +38,22 @@
       "groupName": "Node.js"
     },
     {
-      "description": "@types/node follows the Node major, so its major lands in the Node.js group, which waits for approval on the dashboard like every major",
+      "description": "@types/node follows the Node major: its major joins the Node.js group, without the wait so the group lands together, and waits for approval on the dashboard like every major",
       "matchDepNames": ["@types/node"],
       "matchUpdateTypes": ["major"],
+      "minimumReleaseAge": "0 days",
       "groupName": "Node.js"
     },
     {
-      "description": "A Python minor in .python-version and the Docker image changes the interpreter the code runs on: it waits for approval on the dashboard",
+      "description": "A Python minor (.python-version, the python image, mise) changes the interpreter the code runs on: it gets its own pull request, which waits for approval on the dashboard",
       "matchDepNames": ["python"],
       "matchUpdateTypes": ["minor"],
-      "dependencyDashboardApproval": true
+      "dependencyDashboardApproval": true,
+      "groupName": "Python interpreter"
     },
     {
-      "description": "A Playwright update needs the matching browser image and new screenshot baselines, so it never holds back the other npm updates",
-      "matchPackageNames": ["@playwright/test", "playwright", "playwright-core"],
+      "description": "A Playwright update needs the matching browser image and new screenshot baselines, so the packages and the image move together and never hold back the other updates",
+      "matchPackageNames": ["@playwright/test", "playwright", "playwright-core", "mcr.microsoft.com/playwright"],
       "groupName": "Playwright"
     },
     {
