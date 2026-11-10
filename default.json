@@ -11,10 +11,15 @@
   "vulnerabilityAlerts": { "labels": ["dependencies", "security"] },
   "packageRules": [
     {
-      "description": "config:best-practices waits three days for npm releases; every repository waits seven",
+      "description": "Seven days for npm too (config:best-practices sets three)",
       "matchDatasources": ["npm"],
       "matchUpdateTypes": ["major", "minor", "patch"],
       "minimumReleaseAge": "7 days"
+    },
+    {
+      "description": "Lock-file maintenance has no release date to wait for",
+      "matchUpdateTypes": ["lockFileMaintenance"],
+      "minimumReleaseAge": "0 days"
     },
     {
       "description": "Patch and minor updates merge on their own once the required checks pass, through GitHub's auto-merge",
@@ -26,41 +31,37 @@
     { "matchManagers": ["mise"], "matchUpdateTypes": ["minor", "patch"], "groupName": "mise tools non-major" },
     { "matchCategories": ["docker"], "matchUpdateTypes": ["minor", "patch", "digest"], "groupName": "Docker images non-major" },
     {
-      "description": "Docker tags carry the date of their last push, not of their release, and official images are rebuilt under the same tag every few days, so a seven-day wait would hold every image back for good: image updates skip it and still pass the checks",
+      "description": "Docker images: no wait (a tag's date is its last push)",
       "matchDatasources": ["docker"],
       "minimumReleaseAge": "0 days"
     },
     { "matchManagers": ["github-actions"], "matchUpdateTypes": ["minor", "patch", "digest", "pinDigest"], "groupName": "GitHub Actions non-major" },
     {
-      "description": "Node moves in one pull request everywhere it is named (the Docker image, .node-version, mise, engines), so files that must match never land apart; without the wait, since the Docker image never comes of age and the group would never complete",
+      "description": "Node in one pull request wherever it is named, without the wait",
       "matchDepNames": ["node"],
       "minimumReleaseAge": "0 days",
       "groupName": "Node.js"
     },
     {
-      "description": "The Python interpreter moves in one pull request everywhere it is named (.python-version, the python image, mise), without the wait for the same reason as Node",
+      "description": "The Python interpreter in one pull request wherever it is named, without the wait; a minor waits for approval",
       "matchDepNames": ["python"],
       "minimumReleaseAge": "0 days",
+      "separateMinorPatch": true,
+      "minor": { "dependencyDashboardApproval": true },
       "groupName": "Python interpreter"
     },
     {
-      "description": "A Python minor changes the interpreter the code runs on: it waits for approval on the dashboard, like every major",
-      "matchDepNames": ["python"],
-      "matchUpdateTypes": ["minor"],
-      "dependencyDashboardApproval": true
-    },
-    {
-      "description": "A Playwright update needs the matching browser image and new screenshot baselines, so the packages and the image move together and never hold back the other updates",
-      "matchPackageNames": ["@playwright/test", "playwright", "playwright-core", "mcr.microsoft.com/playwright"],
+      "description": "Playwright's packages in one pull request of their own",
+      "matchSourceUrls": ["https://github.com/microsoft/playwright"],
       "groupName": "Playwright"
     },
     {
-      "description": "OpenNext supports a narrow range of Next.js versions, so Next.js, its @next packages and OpenNext move in one pull request",
-      "matchPackageNames": ["next", "@next/**", "eslint-config-next", "@opennextjs/**"],
+      "description": "Next.js and OpenNext in one pull request",
+      "matchSourceUrls": ["https://github.com/vercel/next.js", "https://github.com/opennextjs/**"],
       "groupName": "Next.js"
     },
     {
-      "description": "The shared workflows' pins (uses: zcxy-dev/dotfiles/.github/workflows/<name>.yml@<sha> # workflows-vX.Y.Z) move to every new release together, a major too, without the seven-day wait, since the releases are our own",
+      "description": "The shared workflows' pins (uses: zcxy-dev/dotfiles/.github/workflows/<name>.yml@<sha> # workflows-vX.Y.Z), every release, a major too, without the wait",
       "matchManagers": ["github-actions"],
       "matchDepNames": ["zcxy-dev/dotfiles"],
       "versioning": "regex:^workflows-v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$",
