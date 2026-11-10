@@ -17,8 +17,8 @@
       "minimumReleaseAge": "7 days"
     },
     {
-      "description": "Lock-file maintenance has no release date to wait for",
-      "matchUpdateTypes": ["lockFileMaintenance"],
+      "description": "Lock-file maintenance and version pins have no release date to wait for",
+      "matchUpdateTypes": ["lockFileMaintenance", "pin"],
       "minimumReleaseAge": "0 days"
     },
     {
@@ -43,11 +43,11 @@
       "groupName": "Node.js"
     },
     {
-      "description": "The Python interpreter in one pull request wherever it is named, without the wait; a minor waits for approval",
+      "description": "The Python interpreter in one pull request wherever it is named, without the wait; a minor waits for approval and a person merges it",
       "matchDepNames": ["python"],
       "minimumReleaseAge": "0 days",
       "separateMinorPatch": true,
-      "minor": { "dependencyDashboardApproval": true },
+      "minor": { "dependencyDashboardApproval": true, "automerge": false },
       "groupName": "Python interpreter"
     },
     {
