@@ -8,11 +8,12 @@
   "minimumReleaseAge": "7 days",
   "prHourlyLimit": 0,
   "major": { "dependencyDashboardApproval": true },
-  "vulnerabilityAlerts": { "labels": ["dependencies", "security"], "minimumReleaseAge": "0 days" },
+  "vulnerabilityAlerts": { "labels": ["dependencies", "security"] },
   "packageRules": [
     {
       "description": "config:best-practices waits three days for npm releases; every repository waits seven",
       "matchDatasources": ["npm"],
+      "matchUpdateTypes": ["major", "minor", "patch"],
       "minimumReleaseAge": "7 days"
     },
     {
@@ -25,31 +26,28 @@
     { "matchManagers": ["mise"], "matchUpdateTypes": ["minor", "patch"], "groupName": "mise tools non-major" },
     { "matchCategories": ["docker"], "matchUpdateTypes": ["minor", "patch", "digest"], "groupName": "Docker images non-major" },
     {
-      "description": "An official image is rebuilt under the same tag every few days, so its digest would never come of age: digest updates of a tag already in use skip the wait",
+      "description": "Docker tags carry the date of their last push, not of their release, and official images are rebuilt under the same tag every few days, so a seven-day wait would hold every image back for good: image updates skip it and still pass the checks",
       "matchDatasources": ["docker"],
-      "matchUpdateTypes": ["digest", "pinDigest"],
       "minimumReleaseAge": "0 days"
     },
     { "matchManagers": ["github-actions"], "matchUpdateTypes": ["minor", "patch", "digest", "pinDigest"], "groupName": "GitHub Actions non-major" },
     {
-      "description": "Node moves in one pull request everywhere it is named (the Docker image, .node-version, mise, engines), so files that must match never land apart. No seven-day wait: Docker Hub dates a tag by its last push, and the node images are rebuilt often enough that the image would never come of age and the group would never complete",
+      "description": "Node moves in one pull request everywhere it is named (the Docker image, .node-version, mise, engines), so files that must match never land apart; without the wait, since the Docker image never comes of age and the group would never complete",
       "matchDepNames": ["node"],
       "minimumReleaseAge": "0 days",
       "groupName": "Node.js"
     },
     {
-      "description": "@types/node follows the Node major: its major joins the Node.js group, without the wait so the group lands together, and waits for approval on the dashboard like every major",
-      "matchDepNames": ["@types/node"],
-      "matchUpdateTypes": ["major"],
+      "description": "The Python interpreter moves in one pull request everywhere it is named (.python-version, the python image, mise), without the wait for the same reason as Node",
+      "matchDepNames": ["python"],
       "minimumReleaseAge": "0 days",
-      "groupName": "Node.js"
+      "groupName": "Python interpreter"
     },
     {
-      "description": "A Python minor (.python-version, the python image, mise) changes the interpreter the code runs on: it gets its own pull request, which waits for approval on the dashboard",
+      "description": "A Python minor changes the interpreter the code runs on: it waits for approval on the dashboard, like every major",
       "matchDepNames": ["python"],
       "matchUpdateTypes": ["minor"],
-      "dependencyDashboardApproval": true,
-      "groupName": "Python interpreter"
+      "dependencyDashboardApproval": true
     },
     {
       "description": "A Playwright update needs the matching browser image and new screenshot baselines, so the packages and the image move together and never hold back the other updates",
@@ -62,11 +60,12 @@
       "groupName": "Next.js"
     },
     {
-      "description": "The shared workflows' pins (uses: zcxy-dev/dotfiles/.github/workflows/<name>.yml@<sha> # workflows-vX.Y.Z) move to a new release together, without the seven-day wait, since the releases are our own",
+      "description": "The shared workflows' pins (uses: zcxy-dev/dotfiles/.github/workflows/<name>.yml@<sha> # workflows-vX.Y.Z) move to every new release together, a major too, without the seven-day wait, since the releases are our own",
       "matchManagers": ["github-actions"],
       "matchDepNames": ["zcxy-dev/dotfiles"],
       "versioning": "regex:^workflows-v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$",
       "minimumReleaseAge": "0 days",
+      "dependencyDashboardApproval": false,
       "schedule": ["at any time"],
       "groupName": "shared workflows"
     }
