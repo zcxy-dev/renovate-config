@@ -9,7 +9,7 @@ The shared Renovate preset. `README.md` is the one description of what the prese
 
 ## Validate
 
-Run the `run:` line of `.github/workflows/validate.yml` from the repository root; it is the `validate` check's only step besides checkout.
+Run the `run:` line of `.github/workflows/validate.yml` from the repository root.
 
 ## Release and rollback
 
