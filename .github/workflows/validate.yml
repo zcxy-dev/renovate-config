@@ -7,7 +7,6 @@ permissions:
   contents: read
 jobs:
   validate:
-    # GitHub's runner: the self-hosted one never serves a public repository.
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
