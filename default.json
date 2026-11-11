@@ -9,6 +9,16 @@
   "prHourlyLimit": 0,
   "major": { "dependencyDashboardApproval": true },
   "vulnerabilityAlerts": { "labels": ["dependencies", "security"] },
+  "customManagers": [
+    {
+      "description": "The Playwright image, pinned by tag and digest in a script under scripts/ or in mise.toml",
+      "customType": "regex",
+      "managerFilePatterns": ["/(^|/)scripts/.+\\.sh$/", "/(^|/)mise\\.toml$/"],
+      "matchStrings": ["(?<depName>mcr\\.microsoft\\.com/playwright):(?<currentValue>v\\d+\\.\\d+\\.\\d+-[a-z]+)@(?<currentDigest>sha256:[a-f0-9]{64})"],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)-(?<compatibility>[a-z]+)$"
+    }
+  ],
   "packageRules": [
     {
       "description": "Seven days for npm too (config:best-practices sets three)",
@@ -54,6 +64,14 @@
       "description": "Playwright's packages in one pull request of their own",
       "matchSourceUrls": ["https://github.com/microsoft/playwright"],
       "groupName": "Playwright"
+    },
+    {
+      "description": "Playwright's image with its packages, opened only once one of them joins it",
+      "matchManagers": ["custom.regex"],
+      "matchDepNames": ["mcr.microsoft.com/playwright"],
+      "matchUpdateTypes": ["major", "minor", "patch"],
+      "groupName": "Playwright",
+      "minimumGroupSize": 2
     },
     {
       "description": "Next.js and OpenNext in one pull request",
