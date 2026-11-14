@@ -5,7 +5,7 @@ The shared Renovate preset. `README.md` is the one description of what the prese
 ## Where things live
 
 - `default.json`: the preset every extending repository loads from `main`.
-- `.github/renovate.json`: this repository's own Renovate config. Its custom manager raises the validator version in `.github/workflows/validate.yml` and matches only the `--package renovate@X.Y.Z` form, so keep the `run:` line in that form.
+- `.github/renovate.json`: this repository's own Renovate config, the preset alone. Renovate does not update the validator version in `.github/workflows/validate.yml`; raise it by hand when needed.
 
 ## Validate
 
