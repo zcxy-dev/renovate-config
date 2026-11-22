@@ -1,6 +1,6 @@
 # renovate-config
 
-The Renovate preset that zcxy-dev repositories extend with `"extends": ["github>zcxy-dev/renovate-config"]` in their `.github/renovate.json`. Every repository extends it except HTT (another owner's code) and htt-payroll (keeps Dependabot until it retires).
+The Renovate preset that zcxy-dev repositories extend with `"extends": ["github>zcxy-dev/renovate-config"]` in their `.github/renovate.json`. Every zcxy-dev repository extends it except two that keep their own update tooling.
 
 It is public so Renovate can read it from any repository, whatever that repository's visibility.
 
