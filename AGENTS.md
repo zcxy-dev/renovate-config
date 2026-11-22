@@ -2,6 +2,8 @@
 
 The shared Renovate preset. `README.md` is the one description of what the preset does and how a repository uses it; read it before changing `default.json`, and keep it matching in the same PR.
 
+This repository is public: keep the names of private repositories, hosts and people out of its files, commits and pull requests.
+
 ## Where things live
 
 - `default.json`: the preset every extending repository loads from `main`.
