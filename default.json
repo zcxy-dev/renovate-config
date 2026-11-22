@@ -35,6 +35,12 @@
       "matchUpdateTypes": ["minor", "patch", "pin", "pinDigest", "digest"],
       "automerge": true
     },
+    {
+      "description": "Lock-file maintenance merges on its own where pnpm writes the lock: pnpm's own minimumReleaseAge holds the refresh to releases at least seven days old",
+      "matchUpdateTypes": ["lockFileMaintenance"],
+      "matchFileNames": ["**/pnpm-lock.yaml"],
+      "automerge": true
+    },
     { "matchCategories": ["js"], "matchUpdateTypes": ["minor", "patch"], "groupName": "npm non-major" },
     { "matchCategories": ["python"], "matchUpdateTypes": ["minor", "patch"], "groupName": "Python non-major" },
     { "matchManagers": ["mise"], "matchUpdateTypes": ["minor", "patch"], "groupName": "mise tools non-major" },
