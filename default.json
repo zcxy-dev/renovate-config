@@ -41,6 +41,12 @@
       "matchFileNames": ["**/pnpm-lock.yaml"],
       "automerge": true
     },
+    {
+      "description": "No lock-file maintenance for mise: with no mise.lock there is nothing to refresh, and its upgrade shares the pnpm refresh's branch and keeps that branch from merging on its own",
+      "matchManagers": ["mise"],
+      "matchUpdateTypes": ["lockFileMaintenance"],
+      "enabled": false
+    },
     { "matchCategories": ["js"], "matchUpdateTypes": ["minor", "patch"], "groupName": "npm non-major" },
     { "matchCategories": ["python"], "matchUpdateTypes": ["minor", "patch"], "groupName": "Python non-major" },
     { "matchManagers": ["mise"], "matchUpdateTypes": ["minor", "patch"], "groupName": "mise tools non-major" },
